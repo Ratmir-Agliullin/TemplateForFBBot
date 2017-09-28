@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * Created by Аглиуллины on 03.09.2017.
  */
 public class Parser {
-
+    private String bufferFilePath = "/home/ratmir/buffer.dat";
     public Integer likesCount = 0;
     public Integer repostCount = 0;
 
@@ -127,13 +127,13 @@ public class Parser {
 
     public void writeStringInFile(String in) throws IOException {
 
-        BufferedWriter myfile = new BufferedWriter(new FileWriter("src/main/java/buffer.dat"));
+        BufferedWriter myfile = new BufferedWriter(new FileWriter(bufferFilePath));
         myfile.write(in);
         myfile.close();
     }
 
     public String getStringFromFile() throws IOException {
-        BufferedReader myfile = new BufferedReader(new FileReader("src/main/java/buffer.dat"));
+        BufferedReader myfile = new BufferedReader(new FileReader(bufferFilePath));
         return myfile.readLine();
     }
 
