@@ -16,7 +16,7 @@ public class BotService {
         Parser parser = new Parser();
         Document doc = null;
         try {
-            doc = Jsoup.connect("https://vk.com/unwebsiteinrussian").get();
+            doc = Jsoup.connect(ConfigManager.getURL()).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
