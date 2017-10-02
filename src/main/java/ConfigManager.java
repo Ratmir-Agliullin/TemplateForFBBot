@@ -40,7 +40,7 @@ public class ConfigManager {
         return Init().getProperty("botToken");
     }
 
-//
+
 //    public static void main(String[] args) {
 //        System.out.println(getURL()+" "+getChannelName()+" "+getBotUserName()+" "+getBotToken());
 //    }
