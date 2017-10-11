@@ -47,7 +47,7 @@ private int flag=0;
             }
             currentPostId = parser.getPostId(0, doc);
             try {
-                Thread.sleep(60000);
+                Thread.sleep(ConfigManager.getTimeOut()*1000);
                 if (parser.getStringFromFile().equals(currentPostId)) {
 
                 } else {

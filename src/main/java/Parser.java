@@ -1,3 +1,4 @@
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
@@ -14,25 +15,70 @@ import java.util.regex.Pattern;
  * Created by Аглиуллины on 03.09.2017.
  */
 public class Parser {
-    private String bufferFilePath = "/home/ratmir/buffer.dat";
+    private String bufferFilePath = "buffer.dat";
     public Integer likesCount = 0;
     public Integer repostCount = 0;
+
+
+    public static void main(String[] args) {
+        Parser parser = new Parser();
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(ConfigManager.getURL()).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(parser.getPostText(5, doc));
+    }
 
     public String getPostId(int index, Document document) {
         String result = null;
 
-        Element element = document.select("div._post.post.page_block.all.own").get(index);
+        Element element = document.select("div._5pbx userContent").get(index);
         result = element.id();
         return result;
     }
 
     public String getPostText(int index, Document document) {
-        Element element = document.select("div._post.post.page_block.all.own").get(index);
-        Elements in = element.getElementsByClass("wall_post_text");
-        String result = in.get(0).text();
+        Element element = document.select("div._3ccb").get(index);
+      Elements in = element.getElementsByClass("userContent");
+      StringBuffer stringBuffer = new StringBuffer(" ");
 
+      int i=0;
+while (true){
+    try {
+        if(getLinkFromText(in.get(0).getElementsByTag("p").get(i)).equals(" "))
+        stringBuffer.append(in.get(0).getElementsByTag("p").get(i).text());
+        else {
+            stringBuffer.append(getLinkFromText(in.get(0).getElementsByTag("p").get(i)));
+            stringBuffer.append("\n");
+            stringBuffer.append(in.get(0).getElementsByTag("p").get(i).text());
+        }
+        stringBuffer.append("\n");
+        i++;
+    } catch (IndexOutOfBoundsException e){
+        break;
+    }
+}
+
+        return stringBuffer.toString();
+    }
+
+    private boolean textFilter(String text){
+     boolean result = false;
+     if(text.substring(0,7).equals("/hashtag") || text.substring(0,4).equals("https"))
+         result=true;
+     return result;
+    }
+
+    private String getLinkFromText(Element element){
+        String result=null;
+        try{
+            result=element.getElementsByTag("a").get(0).attr("href");
+        } catch (IndexOutOfBoundsException e){
+            result=" ";
+        }
         return result;
-
     }
 
     public List<String> getPostImages(int index, Document document) {

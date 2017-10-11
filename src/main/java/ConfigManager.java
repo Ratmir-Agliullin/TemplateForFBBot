@@ -39,6 +39,9 @@ public class ConfigManager {
     public static String getBotToken(){
         return Init().getProperty("botToken");
     }
+    public static int getTimeOut(){
+        return Integer.parseInt(Init().getProperty("timeout"));
+    }
 
 
 //    public static void main(String[] args) {
