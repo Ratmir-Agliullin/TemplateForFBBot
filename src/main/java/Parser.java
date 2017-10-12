@@ -28,7 +28,8 @@ public class Parser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(parser.getPostText(5, doc));
+        System.out.println(parser.getPostText(1, doc));
+        parser.getPostImages(1,doc).stream().forEach(s-> System.out.println(s));
     }
 
     public String getPostId(int index, Document document) {
@@ -47,12 +48,14 @@ public class Parser {
       int i=0;
 while (true){
     try {
-        if(getLinkFromText(in.get(0).getElementsByTag("p").get(i)).equals(" "))
+        String link = getLinkFromText(in.get(0).getElementsByTag("p").get(i));
+
+        if(link.equals(" "))
         stringBuffer.append(in.get(0).getElementsByTag("p").get(i).text());
         else {
             stringBuffer.append(getLinkFromText(in.get(0).getElementsByTag("p").get(i)));
-            stringBuffer.append("\n");
-            stringBuffer.append(in.get(0).getElementsByTag("p").get(i).text());
+          //  stringBuffer.append("\n");
+          //  stringBuffer.append(in.get(0).getElementsByTag("p").get(i).text());
         }
         stringBuffer.append("\n");
         i++;
@@ -64,14 +67,14 @@ while (true){
         return stringBuffer.toString();
     }
 
-    private boolean textFilter(String text){
+    public boolean textFilter(String text){
      boolean result = false;
-     if(text.substring(0,7).equals("/hashtag") || text.substring(0,4).equals("https"))
+     if(text.substring(0,7).equals("/hashtag") || text.substring(8,14).equals("matchtv"))
          result=true;
      return result;
     }
 
-    private String getLinkFromText(Element element){
+    public String getLinkFromText(Element element){
         String result=null;
         try{
             result=element.getElementsByTag("a").get(0).attr("href");
@@ -80,27 +83,24 @@ while (true){
         }
         return result;
     }
-
+//mtm
     public List<String> getPostImages(int index, Document document) {
         String result = null;
         List<String> imageList = new ArrayList<>();
-        Elements elements = document.select("div._post.post.page_block.all.own");
-        Element postContent = elements.get(index).getElementsByClass("_post_content").get(0);
-        Elements in = postContent.getElementsByTag("a");
-        for (Element el : in
-                ) {
-            Attributes attributes = el.attributes();
-            List<Attribute> attributeList = attributes.asList();
-            attributeList.stream().forEach(a -> {
-                Pattern pattern = Pattern.compile("url\\((.*?)\\)");
-                Matcher m = pattern.matcher(a.getValue());
-                if (m.find()) {
-                    String imageLink = m.group(0).substring(4, m.group(0).length() - 1);
-                   imageList.add(imageLink);
-                }
-            });
+        Element element = document.select("div._3ccb").get(index);
+        Elements postContent = element.getElementsByClass("_3x-2");
 
-        }
+            try {
+                for (Element el : postContent
+                        ) {
+                    imageList.add(el.getElementsByTag("a").get(0)
+                            .getElementsByTag("img").get(0).attr("src"));
+                }
+            } catch (IndexOutOfBoundsException e) {
+                imageList.add(" ");
+
+            }
+
         return imageList;
     }
 
