@@ -19,7 +19,7 @@ public class Parser {
     public Integer likesCount = 0;
     public Integer repostCount = 0;
 
-
+//1507908600 1507905000
     public static void main(String[] args) {
         Parser parser = new Parser();
         Document doc = null;
@@ -28,16 +28,17 @@ public class Parser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(parser.getPostText(1, doc));
-        parser.getPostImages(1,doc).stream().forEach(s-> System.out.println(s));
+        System.out.println(parser.getPostText(2, doc));
+        parser.getPostImages(2,doc).stream().forEach(s-> System.out.println(s));
+        System.out.println(parser.getPostId(2, doc));
     }
 
     public String getPostId(int index, Document document) {
         String result = null;
-
-        Element element = document.select("div._5pbx userContent").get(index);
-        result = element.id();
-        return result;
+        Element element = document.select("div._3ccb").get(index);//clearfix
+        Elements in = element.getElementsByClass("clearfix");
+        return in.get(0).getElementsByClass("_5pcp").get(0).getElementsByTag("span").get(2)
+                .getElementsByTag("a").get(0).attr("href");
     }
 
     public String getPostText(int index, Document document) {
